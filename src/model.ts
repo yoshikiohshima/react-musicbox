@@ -38,7 +38,7 @@ export class MusicBoxModel extends Model {
   wrapTime = 0;
   balls:Map<ballId, BallData> = new Map();
   currentId = 0;
-  init(options:any) {
+  init(options: object) {
     super.init(options);
     // {x: normalizedPos, n: note}. x is normalized to [0, width - BallDiameter * 2]. f is converted to y which is with in (height - BallDiameter... 0)
     [
@@ -68,7 +68,7 @@ export class MusicBoxModel extends Model {
   }
 
   deleteUser(viewId:string) {
-    this.balls.forEach((value, key) => {
+    this.balls.forEach((value, _key) => {
       if (value.grabbed === viewId) {
           value.grabbed = null;
       }

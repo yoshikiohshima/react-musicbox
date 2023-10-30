@@ -1,29 +1,18 @@
-import ReactDom from "react-dom/client";
+// import ReactDom from "react-dom/client";
 import {
   usePublish,
   useViewId,
   useModelRoot,
-  InCroquetSession,
   useSubscribe,
   useUpdateCallback,
   useSyncedCallback,
- App
 } from "@croquet/react";
 
-import React, { useState, useCallback } from "react";
+import { useState, useCallback, CSSProperties } from "react";
 
 import {Point, MusicBoxModel, pointerId, ballId, BallData, BallDiameter, ptof} from "./model.ts";
 
 let audioContext:AudioContext|null = null;
-
-/*
-export function MusicBoxApp() {
-  return (
-    <InCroquetSession name={App.autoSession("q")} apiKey="1_urfzbotnt0ehwio5ddzz6nif0jz9zy3h2f9zwsnv" tps={0.5} appId="io.croquet.react.musicbox" password="abc" model={MusicBoxModel} eventRateLimit={60} debug={[]}>
-      <MusicBoxField/>
-    </InCroquetSession>
-  );
-}*/
 
 export function MusicBoxField() {
   const model = useModelRoot() as MusicBoxModel;
@@ -83,8 +72,8 @@ export function MusicBoxField() {
 
   const pointerDown = useCallback((evt:PointerEvent) => {
     enableSound();
-    const x = evt.nativeEvent.offsetX;
-    const y = evt.nativeEvent.offsetY;
+    const x = evt.offsetX;
+    const y = evt.offsetY;
     const pointerId = evt.pointerId;
     const balls = model.balls;
     const entry = findBall(x, y, balls);
@@ -100,7 +89,7 @@ export function MusicBoxField() {
     newGrabInfo.set(evt.pointerId, g);
     setGrabInfo(newGrabInfo);
     publishGrab(ballId);
-    evt.target.setPointerCapture(evt.pointerId);
+    (evt.target as HTMLElement).setPointerCapture(evt.pointerId);
   }, [grabInfo, findBall, model.balls, publishGrab, viewId]);
 
   const pointerMove = useCallback((evt:PointerEvent) => {
@@ -109,8 +98,8 @@ export function MusicBoxField() {
     const info = grabInfo.get(pointerId);
     if (!info) {return;}
 
-    let x = evt.nativeEvent.offsetX - info.grabPoint.x + info.translation.x;
-    let y = evt.nativeEvent.offsetY - info.grabPoint.y + info.translation.y;
+    let x = evt.offsetX - info.grabPoint.x + info.translation.x;
+    let y = evt.offsetY - info.grabPoint.y + info.translation.y;
     if (x <= 0) {x = 0;}
     // if (x > model.width - BallDiameter) {x = model.width - BallDiameter;}
     if (y <= 0) {y = 0}
@@ -130,7 +119,7 @@ export function MusicBoxField() {
 
   const pointerUp = useCallback((evt:PointerEvent) => {
     const pointerId = evt.pointerId;
-    evt.target.releasePointerCapture(pointerId);
+    (evt.target as HTMLElement).releasePointerCapture(pointerId);
     const info = grabInfo.get(pointerId);
     if (!info) {return;}
 
@@ -147,7 +136,7 @@ export function MusicBoxField() {
     publishRelease(info.ballId);
   }, [grabInfo, model.balls, publishRelease, publishRemoveBall, model.width, viewId]);
 
-  const update = (time:number) => {
+  const update = () => {
     setBarPos((oldBarPos) => {
       const updateNow = Date.now();
       const barTiming = (updateNow - lastWrapRealTime) / 2000;
@@ -188,10 +177,10 @@ export function MusicBoxField() {
 
   return (
     <>
-      <div id="field" style={style as any}
-        onPointerDown={pointerDown}
-        onPointerMove={pointerMove}
-       onPointerUp={pointerUp}
+      <div id="field" style={style as CSSProperties}
+        onPointerDown={(pointerDown as unknown) as React.PointerEventHandler<HTMLDivElement>}
+        onPointerMove={(pointerMove as unknown) as React.PointerEventHandler<HTMLDivElement>}
+       onPointerUp={(pointerUp as unknown) as React.PointerEventHandler<HTMLDivElement>}
       >  
         <Bar pos={barPos}></Bar>
         {balls}
@@ -265,9 +254,7 @@ function playSound(toPlay:number[]) :void {
     g.gain.linearRampToValueAtTime(0.2, now + 0.1);
     o.connect(g);
     g.connect(audioContext.destination);
-    //  AudioScheduledSourceNode.start() can take three parameters.
-    // @ts-ignore
-    o.start(0, 0, 2);
+    o.start(0)
 
     const stopTone = () => {
       if (!audioContext) {return;}
