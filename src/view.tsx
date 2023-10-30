@@ -72,8 +72,9 @@ export function MusicBoxField() {
 
   const pointerDown = useCallback((evt:PointerEvent) => {
     enableSound();
-    const x = evt.offsetX;
-    const y = evt.offsetY;
+    const nativeEvent = (evt as unknown as {nativeEvent:PointerEvent}).nativeEvent;
+    const x = nativeEvent.offsetX;
+    const y = nativeEvent.offsetY;
     const pointerId = evt.pointerId;
     const balls = model.balls;
     const entry = findBall(x, y, balls);
@@ -98,8 +99,10 @@ export function MusicBoxField() {
     const info = grabInfo.get(pointerId);
     if (!info) {return;}
 
-    let x = evt.offsetX - info.grabPoint.x + info.translation.x;
-    let y = evt.offsetY - info.grabPoint.y + info.translation.y;
+    const nativeEvent = (evt as unknown as {nativeEvent:PointerEvent}).nativeEvent;
+
+    let x = nativeEvent.offsetX - info.grabPoint.x + info.translation.x;
+    let y = nativeEvent.offsetY - info.grabPoint.y + info.translation.y;
     if (x <= 0) {x = 0;}
     // if (x > model.width - BallDiameter) {x = model.width - BallDiameter;}
     if (y <= 0) {y = 0}
