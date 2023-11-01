@@ -4,6 +4,8 @@ import './style.css';
 import {MusicBoxModel} from "./model.js";
 import {MusicBoxField} from "./view.tsx";
 
+import params from "./apiKey.js";
+
 import {
   InCroquetSession,
   App as CroquetApp
@@ -12,14 +14,13 @@ import {
 function App() {
   return (
       <InCroquetSession
-        name={CroquetApp.autoSession("q")}
-        apiKey="1_urfzbotnt0ehwio5ddzz6nif0jz9zy3h2f9zwsnv"
+        name={params.name || CroquetApp.autoSession("q")}
+        apiKey={params.apiKey}
         tps={0.5}
-        appId="io.croquet.react.musicbox"
-        password="abc"
+        appId={params.appId || "io.croquet.react.musicbox"}
+        password={params.password || CroquetApp.autoPassword()}
         model={MusicBoxModel}
-        eventRateLimit={60}
-        debug={[]}>
+        eventRateLimit={params.eventRateLimit || 60}>
          <MusicBoxField />
       </InCroquetSession>
   )
