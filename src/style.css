@@ -8,9 +8,15 @@ body {
     touch-action: none;
 }
 
-#app {
+#root {
     height: 100%;
     width: 100%;
+}
+
+#field {
+    border: 1px solid black;
+    left: 0;
+    top: 0;
 }
 
 #add-container {
@@ -32,4 +38,7 @@ body {
   background: radial-gradient(circle at 20px 20px, #f00, #000);
   position: absolute;
   user-select: none;
+}
+.innert {
+    position: inherit;
 }

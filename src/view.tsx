@@ -172,37 +172,45 @@ export function MusicBoxField() {
     balls.push(<Ball x={ball.x} y={ball.y} key={id} id={id} grabbed={ball.grabbed}/>);
   });
 
-  const scale = Math.min(1, window.innerWidth / model.width, window.innerHeight / model.height);
+  const neededRatio = (model.width + 100) / (model.height + 100);
+
+  const needV = (window.innerWidth / window.innerHeight) > neededRatio;
+
+  let scale;
+  if (needV) {
+    scale = Math.min(1, window.innerHeight / (model.height + 100));
+  } else {
+    scale = Math.min(1, window.innerWidth / (model.width + 100));
+  }
 
   const style = {
-    transform: `scale(${scale})`, transformOrigin: "0 0", width: model.width, height: model.height,
-    border: "1px solid black", position: "absolute", left: 0, top: 0};
+    transform: `scale(${scale})`, transformOrigin: "0 0", width: model.width, height: model.height};
 
   return (
     <>
       <div id="field" style={style as CSSProperties}
         onPointerDown={(pointerDown as unknown) as React.PointerEventHandler<HTMLDivElement>}
         onPointerMove={(pointerMove as unknown) as React.PointerEventHandler<HTMLDivElement>}
-       onPointerUp={(pointerUp as unknown) as React.PointerEventHandler<HTMLDivElement>}
+        onPointerUp={(pointerUp as unknown) as React.PointerEventHandler<HTMLDivElement>}
       >  
         <Bar pos={barPos}></Bar>
         {balls}
      </div>
-     <BallContainer publishAddBall={publishAddBall}/>
+     <BallContainer publishAddBall={publishAddBall} position={scale * model.height + 20}/>
     </>
   );
 }
 
-function BallContainer(props:{publishAddBall:(x:number, y:number) => void}) {
-  const {publishAddBall} = props;
+function BallContainer(props:{publishAddBall:(x:number, y:number) => void, position:number}) {
+  const {publishAddBall, position} = props;
   const create = () => {
     
     publishAddBall(BallDiameter * 2, BallDiameter * 2);
   }
 
   return (
-    <div id="add-container" onClick={create}>
-       <div className="piece"></div>
+    <div id="add-container" onClick={create} style={{top: `${position}px`}}>
+       <div className="piece innert"></div>
     </div>
   )
 }
