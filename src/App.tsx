@@ -4,7 +4,7 @@ import './style.css';
 import {MusicBoxModel} from "./model.js";
 import {MusicBoxField} from "./view.tsx";
 
-import params from "./apiKey.js";
+import params from "./apiKey.ts";
 
 import {
   InCroquetSession,
