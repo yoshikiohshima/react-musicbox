@@ -9,5 +9,6 @@ export default defineConfig({
         alias: {
             "@croquet/react": path.resolve(__dirname, "node_modules/@croquet/react/index.ts")
         }
-    }
+    },
+    base: "./"
 })

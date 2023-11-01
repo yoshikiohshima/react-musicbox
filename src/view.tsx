@@ -107,6 +107,8 @@ export function MusicBoxField() {
     // if (x > model.width - BallDiameter) {x = model.width - BallDiameter;}
     if (y <= 0) {y = 0}
     if (y > model.height - BallDiameter * 2) {y = model.height - BallDiameter * 2;}
+    const step = (model.height - BallDiameter * 2) / 12;
+    y = Math.floor(y / step) * step;
 
     setViewBalls((oldViewBalls) => {
       const oldEntry = oldViewBalls.get(info.ballId);
