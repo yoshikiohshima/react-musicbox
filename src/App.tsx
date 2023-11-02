@@ -3,8 +3,7 @@ import './style.css';
 
 import {MusicBoxModel} from "./model.js";
 import {MusicBoxField} from "./view.tsx";
-
-import params from "./apiKey.ts";
+console.log(import.meta.env);
 
 import {
   InCroquetSession,
@@ -14,13 +13,13 @@ import {
 function App() {
   return (
       <InCroquetSession
-        name={params.name || CroquetApp.autoSession("q")}
-        apiKey={params.apiKey}
+        name={import.meta.env["VITE_CROQUET_APP_NAME"] || CroquetApp.autoSession("q")}
+        apiKey={import.meta.env["VITE_CROQUET_API_KEY"]}
         tps={0.5}
-        appId={params.appId || "io.croquet.react.musicbox"}
-        password={params.password || CroquetApp.autoPassword()}
+        appId={import.meta.env["VITE_CROQUET_APP_ID"] || "io.croquet.react.musicbox"}
+        password={import.meta.env["VITE_CROQUET_PASSWORD"] || CroquetApp.autoPassword()}
         model={MusicBoxModel}
-        eventRateLimit={params.eventRateLimit || 60}>
+        eventRateLimit={import.meta.env["EVENT_RATE_LIMIT"] || 60}>
          <MusicBoxField />
       </InCroquetSession>
   )
