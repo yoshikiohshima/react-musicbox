@@ -3,7 +3,7 @@ import './style.css';
 
 import {MusicBoxModel} from "./model.js";
 import {MusicBoxField} from "./view.tsx";
-console.log(import.meta.env);
+// console.log(import.meta.env);
 
 import {
   InCroquetSession,
